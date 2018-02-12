@@ -9,4 +9,13 @@ class EventbriteController < ApplicationController
 
     render :json => events["events"]
   end
+
+  def venue
+    venue = HTTParty.get("https://www.eventbriteapi.com/v3/venues/#{params['id']}/?token=#{ENV['EVENTBRITE']}")
+
+    latitude = venue.parsed_response['address']['latitude']
+    longitude = venue.parsed_response['address']['longitude']
+
+    render json: {latitude: latitude, longitude: longitude}
+  end
 end
