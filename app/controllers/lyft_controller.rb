@@ -1,23 +1,23 @@
 class LyftController < ApplicationController
   require 'lyft'
 
-  def index
-    p "*lyft " * 100
-    p "\n" * 5
-
+  def cost_estimates
     client = Lyft::Client.new(
       client_id: ENV['LYFT_CLIENT_ID'],
       client_secret: ENV['LYFT_SECRET'],
       use_sandbox: true
     )
 
-    token = client.oauth.retrieve_access_token.env.body["access_token"]
+    token = ENV['LYFT_TOKEN']
 
+    costs = client.availability.cost(access_token: token,
+                         params: {
+                           start_lat: params["humanCoordinates"]["latitude"],
+                           start_lng: params["humanCoordinates"]["longitude"],
+                           end_lat: params["venueCoordinates"]["latitude"],
+                           end_lng: params["venueCoordinates"]["longitude"],
+                         })
 
-    p client.availability.eta access_token: token,
-                        params: {
-                          lat: 37.7772,
-                          lng: -122.4233
-                        }
+    render json: costs.env.body["cost_estimates"].select{|ride| ride['ride_type'] == 'lyft' || ride['ride_type'] == 'lyft_line'}
   end
 end
