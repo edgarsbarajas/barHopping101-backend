@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   post '/api/lyft' => 'lyft#cost_estimates'
   get '/api/eventbrite' => 'eventbrite#search'
   get 'api/eventbrite/venues/:id' => 'eventbrite#venue'
+  get 'api/google' => 'google#user_location'
 
   resources :twilio, only: [:create]
 end
