@@ -5,7 +5,7 @@ class EventbriteController < ApplicationController
     p "*" * 100
     p params
 
-    events = HTTParty.get("https://www.eventbriteapi.com/v3/events/search/?token=#{ENV['EVENTBRITE']}&q=bar&location.address=#{params['city']}&start_date.keyword=#{params['start']}")
+    events = HTTParty.get("https://www.eventbriteapi.com/v3/events/search/?token=#{ENV['EVENTBRITE']}&q=bar&location.address=#{params['city']}&start_date.keyword=#{params['start']}&categories=110&subcategories=10001")
 
     render :json => events["events"]
   end
